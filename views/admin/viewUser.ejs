@@ -1,0 +1,103 @@
+<section>
+  <div class="container mt-3">
+    <div class="container">
+      
+        <table class="table table-hover" id="userTable" style="min-width: 70vw" data-component="datatable" id="example" data-locale="en" data-search="true">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">E-mail</th>
+              <th scope="col">Phone Number</th>
+              <th scope="col">Activity</th>
+              <th>Options</th>
+            </tr>
+          </thead>
+       
+            <tbody>
+              <% users.forEach((user)=>{ %>
+              <tr>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td> +91 <%= user.number %></td>
+                <% if(user.status) { %>
+                <td  ><span id="<%= user._id %>status" style="font-weight: 700; color: rgb(33, 141, 33); min-width: 4vw; max-width: 4vw;" class="badge rounded-pill alert-success">Active</span></td>
+                <% } else { %>
+                  <td ><span id="<%= user._id %>status" style="font-weight: 700; color: rgb(205, 55, 55);  min-width: 4vw; max-width: 4vw;"class="badge rounded-pill alert-danger">Inactive</span></td>
+                <% } %>
+                <td>
+                  <% if(user.status) { %>
+                    <button id="<%= user._id %>blockBtn" type="button " data-value="<%= user._id %>" class="btn btn-primary float-middle blockButton" style="background-color: rgb(205, 55, 55); min-width: 10vw; max-width: 10vw;" >
+                      Block
+                    </button>
+                 
+                  <% } else { %>
+                    
+                    <button id="<%= user._id %>unBlockBtn" type="button " data-value="<%= user._id %>" class="btn btn-primary float-middle blockButton" style="background-color: rgb(33, 141, 33); min-width: 10vw; max-width: 10vw;">
+                      Unblock
+                    </button>
+                    
+                  <% } %>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+       
+          
+        </table>
+      
+    
+    </div>
+  </div> 
+</section>
+
+
+<script>
+  $(document).ready(function () {
+    $(".blockButton").click(function(){
+      const userId = $(this).data("value");
+      $.ajax({
+        type: "put",
+        url: "/admin/userlist/" + userId
+      })
+        .done((res) => {
+          if(res){
+            $(`#${userId}unBlockBtn`).html('Block').css('background-color', 'rgb(205, 55, 55)')
+            $(`#${userId}blockBtn`).html('Block').css('background-color', 'rgb(205, 55, 55)')
+            $(`#${userId}status`).html('Active').css('color', 'rgb(33, 141, 33)').removeClass('alert-danger').addClass('alert-success')
+            toastr.success('User Unblocked')
+          } 
+          else {
+            $(`#${userId}blockBtn`).html('Unblock').css('background-color', 'rgb(33, 141, 33)')
+            $(`#${userId}unBlockBtn`).html('Unblock').css('background-color', 'rgb(33, 141, 33)')
+            $(`#${userId}status`).html('Inactive').css('color', 'rgb(205, 55, 55').removeClass('alert-success').addClass('alert-danger')
+            toastr.error('User Blocked')
+          } 
+        })
+        .fail((err) => {
+          console.log(err.responseJSON.error);
+        });
+    });
+  });
+  toastr.options = {
+  debug: false,
+  newestOnTop: false,
+  positionClass: 'toast-top-right',
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: '300',
+  hideDuration: '1000',
+  timeOut: '2000',
+  extendedTimeOut: '1000',
+  showEasing: 'swing',
+  hideEasing: 'swing',
+  showMethod: 'fadeIn',
+  hideMethod: 'fadeOut'
+}
+</script>
+<script>
+$(document).ready(function () {
+    $('#userTable').DataTable({
+      responsive:true
+    })
+})
+</script>

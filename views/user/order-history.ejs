@@ -1,0 +1,71 @@
+<div class="container mt-2 mb-5">
+  <table class="table table-cart table-mobile" id="order-history">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Total</th>
+        <th>Order Status</th>
+        <th>Payment</th>
+        <th>Date</th>
+        <th></th>
+      </tr>
+    </thead>
+    
+    <tbody>
+        <% orderDetails.forEach(order=> { %>
+
+        <tr>
+          <td>
+            <a href="/order-details/<%= order._id %>"><%= order._id %></a>
+          </td>
+          <td>
+            <%= order.totalAmount %>
+          </td>
+          <td id="<%= order._id %>">
+            <%= order.status %>
+          </td>
+          <td>
+            <%= order.paymentOption %>
+          </td>
+          <td id="<%= order._id %>date">
+            <%= order.date.toLocaleDateString() %>
+          </td>
+          <td class="remove-col">
+              <% if (order.status != 'Cancelled' && order.status != 'Delivered' && order.status != 'Returned') { %>
+                <button class="btn btn-outline-primary-2" id="<%= order._id %>cancelBtn" onclick="cancelOrder('<%= order._id %>', status='Cancelled','<%= order.userId._id %>')" >Cancel</button>
+              <% } else if( order.status == 'Delivered' ) {%>
+                <button class="btn btn-outline-primary-2" id="<%= order._id %>cancelBtn" onclick="cancelOrder('<%= order._id %>', status='Returned', '<%= order.userId._id %>')">Return</button>
+              <% } %>
+              
+          </td>
+
+        </tr>
+        <% }) %>
+      </tbody>
+
+  </table><!-- End .table table-wishlist -->
+  <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+</div>
+
+<script>
+  $(document).ready(function () {
+    $('#order-history').DataTable({
+      responsive: true
+    })
+  })
+</script>
+<script>
+  function cancelOrder(orderId, status, userId){
+    $.ajax({
+      url:'/cancel-order/' + orderId,
+      method:'put',
+      data:{
+        id: userId,
+        status: status
+      }
+    }).done((res) => {
+      $(`#${orderId}`).html(status)
+      $(`#${orderId}cancelBtn`).hide()
+    })
+  }
+</script>

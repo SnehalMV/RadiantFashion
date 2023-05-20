@@ -1,0 +1,116 @@
+<h1 class="text-center mt-2" style="color: darkslategrey;">Edit Product</h1>
+<div class="container mt-5 d-block justify-content-center">
+  <form action="/admin/editProduct/<%= product._id %>" method="post" style="min-width: 30vw; max-width: 40vw;" enctype="multipart/form-data" id="editForm" >
+    <div class="mb-3">
+      <label class="form-label">Product Name</label>
+      <input type="name" class="form-control" id="prodname" onkeyup="return nameValidate()"name="name" value="<%= product.name %>">
+      <span id="name-error" class="text-danger"></span>
+    </div>
+    <div>
+      <label class="form-label"> Product Category</label>
+      <select value="<%= product.category %>" class="form-control" name="category">
+        <label class="form-label" > Product Category</label>
+        <option value="" disabled>Select Category</option>
+        <% categories.forEach(category => { %>
+          <option value="<%= category.name %>"><%= category.name %></option>
+          <% }) %>
+        </select>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Price</label>
+      <input type="text" class="form-control" id="price" onkeyup=" return priceValidate()" name="price" value="<%= product.price %>" >
+      <span id="price-error" class="text-danger"></span>
+
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Quantity</label>
+      <input type="text" class="form-control" id="quantity" onkeyup="return quantityValidate()" name="quantity" value="<%= product.quantity %>">
+      <span id="qty-error" class="text-danger"></span>
+
+    </div>
+    <div class="mb-3">
+      <label  class="form-label">Upload Product Images</label>
+      <input class="form-control" type="file" id="formFileMultiple" name="myfiles" multiple>
+    </div>
+    <div>
+      <img style=" max-width: 3rem;" src="/images/<%= product.Images[0] %>" id="imageView1" />
+      <img style=" max-width: 3rem;" src="/images/<%= product.Images[1] %>" id="imageView2" />
+      <img style=" max-width: 3rem;" src="/images/<%= product.Images[2] %>" id="imageView3" />
+      <img style=" max-width: 3rem;" src="/images/<%= product.Images[3] %>" id="imageView4" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-4">Submit</button>
+    
+  </form>
+  <span id="form-error" class="text-danger"></span>
+</div>
+<script>
+
+function nameValidate(){
+      const regName = /^[a-zA-Z]+(\s[a-zA-Z]+)*$/
+      const name = document.getElementById('prodname').value;
+      if(!regName.test(name)){
+          document.getElementById('name-error').innerHTML = 'Enter Valid Product Name'
+          return false;
+      }else{
+          document.getElementById('name-error').innerHTML = ''
+          return true;
+      }
+  }
+
+  function priceValidate(){
+      const regPrice = /^[1-9]\d*$/
+      const price = document.getElementById('price').value;
+      if(!regPrice.test(price)){
+          document.getElementById('price-error').innerHTML = 'Enter Valid Price'
+          return false;
+      }else{
+          document.getElementById('price-error').innerHTML = ''
+          return true;
+      }
+  }
+
+  const priceInput = document.getElementById('price');
+  priceInput.addEventListener('input', event => {
+      const input = event.target.value;
+      const numericInput = input.replace(/[^0-9]/g, '');
+      event.target.value = numericInput;
+  })
+
+  function quantityValidate(){
+      const regQuantity = /^(100|[1-9][0-9]?)$/
+      const quantity = document.getElementById('quantity').value;
+      if(!regQuantity.test(quantity)){
+          document.getElementById('qty-error').innerHTML = 'Enter Valid Quantity'
+          return false;
+      }else{
+          document.getElementById('qty-error').innerHTML = ''
+          return true;
+      }
+  }
+
+  const qtyInput = document.getElementById('quantity');
+  qtyInput.addEventListener('input', event => {
+      const input = event.target.value;
+      const numericInput = input.replace(/[^0-9]/g, '');
+      event.target.value = numericInput;
+  })
+
+  const form = document.getElementById('editForm')
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (formValidate()) {
+      form.submit()
+    } else {
+      document.getElementById('form-error').innerHTML = 'Please Check All The Fields'
+    }
+  })
+  function formValidate(){
+      if(nameValidate() && priceValidate() && quantityValidate() ){
+          return true
+          
+      }else{
+          return false
+      }
+  }
+</script>

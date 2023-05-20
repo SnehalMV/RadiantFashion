@@ -1,0 +1,104 @@
+<section>
+  <a href="/admin/addCoupon">
+    <button type="button" class="btn btn-success float-end mb-3">Add Coupon</button>
+  </a>
+  <div class="container mt-3">
+    <div class="container">
+      <table class="table table-hover" id="couponTable" style="min-width: 70vw;">
+        <thead>
+          <tr>
+            <!-- <th scope="col">#</th> -->
+            <th scope="col">Code</th>
+            <th scope="col">Description</th>
+            <th scope="col">Offer Percentage</th>
+            <th scope="col">Minimum Price</th>
+            <th scope="col">Max Off</th>
+            <th scope="col">Status</th>
+            <th scope="col">Expiry Date</th>
+            <th scope="col">Options</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% coupons.forEach(coupon=> { %>
+
+            <tr id="<%= coupon._id %>">
+              <td>
+                <%= coupon.code %>
+              </td>
+              <td>
+                <%= coupon.description %>
+              </td>
+              <td>
+                <%= coupon.offerPercentage %>
+              </td>
+              <td>
+                <%= coupon.minPrice %>
+              </td>
+              <td>
+                <%= coupon.maxOff %>
+              </td>
+              
+                <% if(coupon.status) { %>
+              <td>
+                <span style="color: rgb(33, 141, 33);min-width: 3vw; max-width: 3vw;" class="badge rounded-pill alert-success">Active</span>
+              </td>
+                <% } else { %>
+                  <td>
+                    <span style="color: rgb(205, 55, 55);min-width: 3vw; max-width: 3vw;" class="badge rounded-pill alert-danger">Expired</span>
+                  </td>
+                  <% } %>
+                  <td>
+                    <%= coupon.expiry.toLocaleDateString() %>
+                  </td>
+              <td>
+                <a href="/admin/editCoupon/<%= coupon._id %>" style="text-decoration: none;">
+                  <button type="button" class="btn btn-primary me-2" id="deleteButton">Edit</button>
+                </a>
+                <button type="button" class="btn btn-primary me-2" id="deleteButton"
+                  style="background-color: rgb(205, 55, 55);" onclick="deleteCoupon('<%= coupon._id %>')">
+                  Delete
+                </button>
+              </td>
+            </tr>
+
+            <% }) %>
+
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</section>
+<script>
+  $(document).ready(function () {
+    $('#couponTable').DataTable({
+      responsive: true
+    })
+  })
+  function deleteCoupon(id) {
+    $.ajax({
+      url: '/admin/deleteCoupon/' + id,
+      method: 'put',
+      success: (response) => {
+        $(`#${id}`).css('display', 'none')
+        toastr.error('Coupon Deleted')
+      }
+    })
+  }
+  toastr.options = {
+    debug: false,
+    newestOnTop: false,
+    positionClass: 'toast-top-right',
+    preventDuplicates: false,
+    onclick: null,
+    showDuration: '300',
+    hideDuration: '1000',
+    timeOut: '2000',
+    extendedTimeOut: '1000',
+    showEasing: 'swing',
+    hideEasing: 'swing',
+    showMethod: 'fadeIn',
+    hideMethod: 'fadeOut'
+  }
+</script>

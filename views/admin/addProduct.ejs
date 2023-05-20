@@ -1,0 +1,148 @@
+<style>
+  #imageDiv img{
+    max-height: 10vh;
+    margin-left: 1vw;
+}
+</style>
+<div>
+  <h1 class="text-center mt-2 d-block" style="color: darkslategrey;">Add Product</h1>
+</div>
+<div class="container mt-5 d-block justify-content-center">
+  <form action="/admin/addProduct" method="post" style="min-width:  30vw; max-width: 40vw;" enctype="multipart/form-data" id="prodform">
+    <div class="mb-3">
+      <label class="form-label">Product Name</label>
+      <input type="name" class="form-control" id="prodname" name="name" onkeyup="return nameValidate()" required>
+      <span id="name-error" style="color: red;"></span>
+    </div>
+    <div>
+      <label class="form-label"> Product Category</label>
+      <select class="form-control" name="category">
+        <label class="form-label"> Product Category</label>
+        <option value="" selected disabled>Select Category</option>
+          <% categories.forEach(category => { %>
+          <option value="<%= category.name %>"><%= category.name %></option>
+          <% }) %>
+        </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Price</label>
+      <input type="text" class="form-control" name="price" id="price" onkeyup=" return priceValidate()" required>
+      <span id="price-error" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Quantity</label>
+      <input type="text" class="form-control" id="quantity" name="quantity" onkeyup="return quantityValidate()" required>
+      <span id="qty-error" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+      <label  class="form-label">Upload Product Images</label>
+      <input class="form-control mb-2" type="file" id="formFileMultiple" name="myfiles" multiple required>
+      <div id="imageDiv" class="mb-3"></div>
+      
+     
+    </div>
+    <button type="submit" class="btn btn-primary mt-4">Submit</button>
+    </div>
+    
+  </form>
+  <span id="form-error" class="text-danger"></span>
+</div>
+
+<script>
+  function nameValidate(){
+        const regName = /^[a-zA-Z]+(\s[a-zA-Z]+)*$/
+        const name = document.getElementById('prodname').value;
+        if(!regName.test(name)){
+            document.getElementById('name-error').innerHTML = 'Enter Valid Product Name'
+            return false;
+        }else{
+            document.getElementById('name-error').innerHTML = ''
+            return true;
+        } 
+    }
+    function priceValidate(){
+        const regPrice = /^[1-9]\d*$/
+        const price = document.getElementById('price').value;
+        if(!regPrice.test(price)){
+            document.getElementById('price-error').innerHTML = 'Enter Valid Price'
+            return false;
+        }else{
+            document.getElementById('price-error').innerHTML = ''
+            return true;
+        }
+    }
+    const priceInput = document.getElementById('price');
+    priceInput.addEventListener('input', event => {
+        const input = event.target.value;
+        const numericInput = input.replace(/[^0-9]/g, '');
+        event.target.value = numericInput;
+    })
+
+
+    function quantityValidate(){
+        const regQuantity = /^(100|[1-9][0-9]?)$/
+        const quantity = document.getElementById('quantity').value;
+        if(!regQuantity.test(quantity)){
+            document.getElementById('qty-error').innerHTML = 'Enter Valid Quantity'
+            return false;
+        }else{
+            document.getElementById('qty-error').innerHTML = ''
+            return true;
+        }
+    }
+
+    const qtyInput = document.getElementById('quantity');
+    qtyInput.addEventListener('input', event => {
+        const input = event.target.value;
+        const numericInput = input.replace(/[^0-9]/g, '');
+        event.target.value = numericInput;
+    })
+
+    const form = document.getElementById('prodform')
+    form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (formValidate()) {
+      form.submit()
+    } else {
+      document.getElementById('form-error').innerHTML = 'Please Check All The Fields'
+    }
+  })
+
+    function formValidate(){
+        if(nameValidate() && priceValidate() && quantityValidate() ){
+            return true
+        }else{
+            return false
+        }
+    }
+</script>
+<script>
+  const fileInput = document.getElementById('formFileMultiple');
+    const selectedImages = document.getElementById('imageDiv');
+
+    fileInput.addEventListener('change', handleFileSelection);
+
+    function handleFileSelection(event) {
+      const files = event.target.files;
+      selectedImages.innerHTML = '';
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          const image = document.createElement('img')
+          image.src = e.target.result;
+          selectedImages.appendChild(image);
+        };
+
+        reader.readAsDataURL(file);
+      }
+
+      selectedImages.style.display = 'flex';
+      selectedImages.style.flexWrap = 'wrap';
+      selectedImages.style.justifyContent = 'left';
+      selectedImages.style.alignItems = 'center'
+      
+    }
+</script>

@@ -1,0 +1,156 @@
+<body>
+  <div class="page-wrapper">
+
+
+    <main class="main">
+
+      <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/profile">Profile</a></li>
+            <li class="breadcrumb-item"><a href="/add-address">Add Address</a></li>
+            <li class="breadcrumb-item active" aria-current="page"></li>
+          </ol>
+        </div><!-- End .container -->
+      </nav><!-- End .breadcrumb-nav -->
+
+      <div class="page-content">
+        <div class="checkout">
+          <div class="container">
+            <div class="checkout-discount">
+
+            </div><!-- End .checkout-discount -->
+            <form action="/add-address" method="post" id="addressForm">
+              <div class="row">
+                <div class="col">
+                  <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+                  <label>Street address *</label>
+                  <input type="text" id="addressLine" class="form-control" name="addressLine" onkeyup="return addressValidate()" placeholder="House name and Street name"
+                    required>
+                    <span id="adr-error" class="text-danger"></span>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <label>Town *</label>
+                      <input type="text"id="town" name="town" class="form-control" onkeyup="return townValidate()" required>
+                      <span id="town-error" class="text-danger"></span>
+                    </div><!-- End .col-sm-6 -->
+
+                    <div class="col-sm-6">
+                      <label>State *</label>
+                      <input type="text" id="state" name="state" class="form-control" onkeyup="return stateValidate()"required>
+                      <span id="state-error" class="text-danger"></span>
+                    </div><!-- End .col-sm-6 -->
+                  </div><!-- End .row -->
+
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <label>Pincode *</label>
+                      <input type="text" id="pincode" name="pincode" class="form-control" onkeyup="return pincodeValidate()" required>
+                      <span id="pincode-error" class="text-danger"></span>
+                    </div><!-- End .col-sm-6 -->
+
+
+                  </div><!-- End .row -->
+
+                  <span style="color: red;"><%= locals.invalid %></span>
+                  <button type="submit" class="btn btn-outline-primary-2 mt-2">
+                    <span>Add Address</span>
+                    <i class="icon-long-arrow-right"></i>
+                  </button>
+                <span id="form-error" class="text-danger"></span>
+
+
+
+                </div><!-- End .col-lg-9 -->
+              </div>
+            </form>
+          </div><!-- End .container -->
+        </div><!-- End .checkout -->
+      </div><!-- End .page-content -->
+    </main><!-- End .main -->
+
+
+  </div><!-- End .page-wrapper -->
+  <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+
+  <!-- Plugins JS File -->
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/jquery.hoverIntent.min.js"></script>
+  <script src="assets/js/jquery.waypoints.min.js"></script>
+  <script src="assets/js/superfish.min.js"></script>
+  <script src="assets/js/owl.carousel.min.js"></script>
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+</body>
+<script>
+      function addressValidate() {
+        const regName = /^[a-zA-Z]+(\s[a-zA-Z]+)*$/
+        const name = document.getElementById('addressLine').value;
+        const nameTrim = name.trim()
+        if (!regName.test(nameTrim)) {
+            document.getElementById('adr-error').innerHTML = 'Enter valid Address'
+            return false;
+        } else {
+            document.getElementById('adr-error').innerHTML = ''
+            return true;
+        }
+    }
+
+    function townValidate() {
+        const regTown = /^[a-zA-Z]+$/
+        const town = document.getElementById('town').value
+        const townTrim = town.trim()
+        if (!regTown.test(townTrim)) {
+            document.getElementById('town-error').innerHTML = 'Town name is incorrect'
+            return false;
+        } else {
+            document.getElementById('town-error').innerHTML = ''
+            return true;
+        }
+    }
+
+    function stateValidate() {
+        const regState = /^[a-zA-Z]+$/
+        const state = document.getElementById('state').value;
+        const stateTrim = state.trim()
+        if (!regState.test(stateTrim)) {
+            document.getElementById('state-error').innerHTML = 'State name is incorrect'
+            return false;
+        } else {
+            document.getElementById('state-error').innerHTML = ''
+            return true;
+        }
+    }
+
+    function pincodeValidate() {
+        const regNumber = /^[1-9]{1}\d{5}$/
+        const pincode = document.getElementById('pincode').value;
+        if (!regNumber.test(pincode)) {
+            document.getElementById('pincode-error').innerHTML = 'Enter Valid Pincode'
+            return false;
+        } else {
+            document.getElementById('pincode-error').innerHTML = ''
+            return true;
+        }
+    }
+
+    const form = document.getElementById('addressForm')
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (formValidate()) {
+            form.submit()
+        } else {
+            document.getElementById('form-error').innerHTML = 'Please Check All The Fields'
+        }
+    })
+    function formValidate() {
+        if (addressValidate() && townValidate() && stateValidate() && pincodeValidate()) {
+          return true
+        } else {
+            return false
+        }
+    }
+</script>

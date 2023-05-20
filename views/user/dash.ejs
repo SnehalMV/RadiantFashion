@@ -1,0 +1,294 @@
+<body>
+
+
+  <main class="main">
+    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+      <div class="container">
+        <h1 class="page-title">My Account</h1>
+      </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">My Account</li>
+        </ol>
+      </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+
+    <div class="page-content">
+      <div class="dashboard">
+        <div class="container">
+
+          <div class="row">
+
+
+            <aside class="col-md-4 col-lg-3">
+              <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab"
+                    aria-controls="tab-dashboard" aria-selected="true">Profile</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="tab-wallet-link" data-toggle="tab" href="#tab-wallet" role="tab"
+                    aria-controls="tab-wallet" aria-selected="false">Wallet</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab"
+                    aria-controls="tab-address" aria-selected="false">Addresses</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab"
+                    aria-controls="tab-account" aria-selected="false">Password Settings</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/logout">Sign Out</a>
+                </li>
+                <a href="/order-history"><button class="btn btn-primary mt-2">My Orders</button></a>
+              </ul>
+            </aside><!-- End .col-lg-3 -->
+
+            <div class="col-md-8 col-lg-9">
+              <div class="tab-content">
+                <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel"
+                  aria-labelledby="tab-dashboard-link">
+                  <div class="container">
+
+                    <div class="row" id="main">
+
+                      <div class="col-md-9">
+                        <form id="editUser" action="/edit-user" method="post">
+                          <h2>Profile</h2>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <input type="text" value="<%= userDetails.name %>" onkeyup="return nameValidate()"
+                                  name="name" id="name" class="form-control input-lg" placeholder="First Name"
+                                  tabindex="1" required>
+                                <span id="name-error" class="text-danger"></span>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <input type="text" value="<%= userDetails.number %>" onkeyup="return numberValidate()"
+                                  name="number" id="number" class="form-control input-lg" placeholder="Mobile Number"
+                                  tabindex="1" required>
+                                <span id="number-error" class="text-danger"></span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <input type="email" value="<%= userDetails.email %>" onkeyup="return emailValidate()"
+                              name="email" id="email" class="form-control input-lg" placeholder="Email Address"
+                              tabindex="4" required>
+                            <span id="email-error" class="text-danger"></span>
+                          </div>
+
+
+                          <div><button type="submit" class="btn btn-outline-primary-2 btn-lg">Save</button>
+                          </div>
+                          <span id="form-error" class="text-danger"></span>
+
+
+                        </form>
+                        <% if (locals.defaultAddress == null) { %>
+                          <div class="mt-3"><strong>No Address Added</strong></div>
+                        <% } else { %>
+                        <div class="row">
+                          <div class="col">
+                            <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+                            <label>Street address *</label>
+                            <input type="text" class="form-control"
+                              value="<%= defaultAddress.addresses[0].addressLine %>" name="addressLine"
+                              placeholder="House number and Street name" disabled>
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <label>Town *</label>
+                                <input type="text" value="<%= defaultAddress.addresses[0].town %>" name="town"
+                                  class="form-control" disabled>
+                              </div><!-- End .col-sm-6 -->
+
+                              <div class="col-sm-6">
+                                <label>State *</label>
+                                <input type="text" value="<%= defaultAddress.addresses[0].state %>" name="state"
+                                  class="form-control" disabled>
+                              </div><!-- End .col-sm-6 -->
+                            </div><!-- End .row -->
+
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <label>Pincode *</label>
+                                <input type="text" value="<%= defaultAddress.addresses[0].pincode %>" name="pincode"
+                                  class="form-control" disabled>
+                              </div><!-- End .col-sm-6 -->
+
+
+                            </div><!-- End .row -->
+
+                          </div><!-- End .col-lg-9 -->
+                        </div>
+                        <% } %>
+                      </div>
+                    </div>
+                  </div>
+                </div><!-- .End .tab-pane -->
+
+                <div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
+                  <div class="col-lg-12">
+                    <div class="card card-dashboard">
+                      <div class="card-body">
+                        <h3 class="card-title mb-2">Wallet Balance: </h3><!-- End .card-title -->
+
+                        <h5>Rs.<%= userDetails.walletAmount %></h5>
+
+                      </div><!-- End .card-body -->
+                    </div><!-- End .card-dashboard -->
+                  </div><!-- End .col-lg-6 -->
+                </div><!-- End .row -->
+                
+
+                <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
+                  <p>The following addresses will be used on the checkout page by default.</p>
+
+                  <div class="row">
+
+                    <div class="col-lg-6">
+                      <div class="card card-dashboard">
+                        <div class="card-body">
+                          <h3 class="card-title">Shipping Address</h3><!-- End .card-title -->
+
+                          <a href="/add-address">Add <i class="icon-edit"></i></a></p>
+
+                        </div><!-- End .card-body -->
+                      </div><!-- End .card-dashboard -->
+                    </div><!-- End .col-lg-6 -->
+                  </div><!-- End .row -->
+
+                  <div class="row">
+                    <% savedAddress.forEach(address=> { %>
+                      <div class="col-lg-4">
+                        <div class="card card-dashboard">
+                          <div class="card-body" style="min-height: 40vh;">
+                            <p class="card-text">Address: <%= address.addressLine %>
+                            </p>
+                            <p class="card-text">Town: <%= address.town %>
+                            </p>
+                            <p class="card-text">State: <%= address.state %>
+                            </p>
+                            <p class="card-text">Pincode: <%= address.pincode %>
+                            </p>
+
+                          </div>
+                          <% if (!address.defaultAddress) { %>
+                            <a href="/change-address/<%= address._id %>" class="btn">Make default</a>
+                            <% } %>
+                        </div>
+                      </div><!-- End .col-lg-4 -->
+                      <% }) %>
+                  </div><!-- End .row -->
+
+
+                </div>
+
+                <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
+                  <form action="/change-password" method="post">
+                    <label>Current password </label>
+                    <input type="password" class="form-control">
+
+                    <label>New password </label>
+                    <input type="password" class="form-control">
+
+                    <label>Confirm new password</label>
+                    <input type="password" class="form-control mb-2">
+
+                    <button type="submit" class="btn btn-outline-primary-2">
+                      <span>SAVE CHANGES</span>
+                      <i class="icon-long-arrow-right"></i>
+                    </button>
+                  </form>
+                </div><!-- .End .tab-pane -->
+              </div>
+            </div><!-- End .col-lg-9 -->
+          </div><!-- End .row -->
+        </div><!-- End .container -->
+      </div><!-- End .dashboard -->
+    </div><!-- End .page-content -->
+  </main><!-- End .main -->
+
+
+
+
+
+
+  <!-- Plugins JS File -->
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/jquery.hoverIntent.min.js"></script>
+  <script src="assets/js/jquery.waypoints.min.js"></script>
+  <script src="assets/js/superfish.min.js"></script>
+  <script src="assets/js/owl.carousel.min.js"></script>
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+<script>
+  function nameValidate() {
+    const regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
+    const name = document.getElementById('name').value;
+    if (!regName.test(name)) {
+      document.getElementById('name-error').innerHTML = 'Enter correct Name'
+      return false;
+    } else {
+      document.getElementById('name-error').innerHTML = ''
+      return true;
+    }
+  }
+  function numberValidate() {
+    const regNumber = /^[1-9]{1}\d{9}$/
+    const number = document.getElementById('number').value;
+    if (!regNumber.test(number)) {
+      document.getElementById('number-error').innerHTML = 'Enter Valid 10-digit Number'
+      return false;
+    } else {
+      document.getElementById('number-error').innerHTML = ''
+      return true;
+    }
+  }
+  const mobileInput = document.getElementById('number');
+  mobileInput.addEventListener('input', event => {
+    const input = event.target.value;
+    const numericInput = input.replace(/[^0-9]/g, '');
+    event.target.value = numericInput;
+  })
+
+  function emailValidate() {
+    const validRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const email = document.getElementById('email').value;
+    if (!validRegex.test(email)) {
+      document.getElementById('email-error').innerHTML = 'Enter correct E-mail'
+      return false;
+    } else {
+      document.getElementById('email-error').innerHTML = ''
+      return true;
+    }
+  }
+  const form = document.getElementById('editUser')
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (formValidate()) {
+      form.submit()
+    } else {
+      document.getElementById('form-error').innerHTML = 'Please Check All The Fields'
+    }
+  })
+
+  function formValidate() {
+    if (nameValidate() && emailValidate() && numberValidate()) {
+      return true
+
+    } else {
+      return false
+    }
+  }
+</script>

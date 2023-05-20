@@ -1,0 +1,54 @@
+<head>
+  <meta charset="utf-8">
+  <title>Evara Dashboard</title>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/favicon.svg">
+  <!-- Template CSS -->
+  <link href="/css/main.css" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+    <main>
+        <header class="main-header style-2 navbar">
+            <div class="col-brand">
+                    <img src="/banners/logo.png" class="logo" style="max-height: 75px;" alt="Evara Dashboard">
+            </div>
+            
+        </header>
+        <section class="content-main mb-80" style="background-color: white;">
+            <div class="mx-auto card-login mt-5" style="min-width: 50vw; ;">
+                <div>
+                    <h4 class="card-title mt-5 mb-4">Sign in</h4>
+                    <form method="post" action="/admin">
+                        <div class="mb-3">
+                            <input class="form-control" placeholder="Email" type="text" name = "email">
+                        </div> <!-- form-group// -->
+                        <div class="mb-3">
+                            <input class="form-control" placeholder="Password" type="password" name="password">
+                            <span id="login-error" style="color:red"><%= locals.invalid %></span>
+                        </div> <!-- form-group// -->
+                        <!-- <div class="mb-3">
+                            <a href="#" class="float-end font-sm text-muted">Forgot password?</a>
+                            <label class="form-check">
+                                <input type="checkbox" class="form-check-input" checked="">
+                                <span class="form-check-label">Remember</span>
+                            </label>
+                        </div> form-group form-check .// -->
+                        <div class="mb-4"> 
+                            <button type="submit" class="btn btn-primary w-100"> Login </button>
+                        </div> <!-- form-group// -->
+                    </form>
+
+                    
+                </div>
+            </div>
+        </section>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+        

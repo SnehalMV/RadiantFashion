@@ -1,0 +1,103 @@
+
+<section>
+  <a href="/admin/addBanner">
+    <button type="button" class="btn btn-success float-end mb-3">Add Banner</button>
+  </a>
+  <div class="container mt-3">
+    <div class="container">
+      <table class="table table-hover" id="bannerTable" style="min-width: 70vw;">
+        <thead>
+          <tr>
+            <!-- <th scope="col">#</th> -->
+            <th scope="col">Name</th>
+            <th scope="col">Title</th>
+            <th scope="col">Subtitle</th>
+            <th scope="col">Image</th>
+            <th scope="col">Status</th>
+            <th scope="col">Options</th>
+          </tr>
+        </thead>
+        <% banners.forEach(banner => { %>     
+          <tbody>           
+              <tr>
+                <td><%= banner.bannerName %></td>
+                <td><%= banner.bannerTitle  %></td>
+                <td><%= banner.bannerSubtitle  %></td>
+                <td>
+                  <img style=" max-width: 3rem;" src="/banners/<%= banner.bannerImage %>" id="productImage1" name="productImage1"/>
+                </td>
+                  <% if(banner.status) { %>
+                  <td><span id="<%= banner._id %>active" style="color: rgb(33, 141, 33); min-width: 4vw; max-width: 4vw;"
+                      class="badge rounded-pill alert-success">Enabled</span></td>
+                  <% } else { %>
+                    <td><span id="<%= banner._id %>active" style="color: rgb(205, 55, 55); min-width: 4vw; max-width: 4vw;"
+                        class="badge rounded-pill alert-danger">Disabled</span></td>
+                    <% } %>
+                <td> 
+                  <a href="/admin/editBanner/<%= banner._id %>" style="text-decoration: none;">
+                    <button type="button " class="btn btn-primary me-2" id="Button">
+                      Edit
+                    </button>
+                  </a>
+                  <% if (banner.status) { %>            
+                    <button type="button" class="btn btn-primary" id="<%= banner._id %>disable" style="background-color: rgb(205, 55, 55); min-width: 10vw; max-width: 10vw;" onclick="disableBanner('<%= banner._id %>')">
+                      Disable
+                    </button>
+                  <% } else {%>   
+                    <button type="button" class="btn btn-primary" id="<%= banner._id %>enable" style="background-color: rgb(33, 141, 33); min-width: 10vw; max-width: 10vw;" onclick="disableBanner('<%= banner._id %>')">
+                      Enable
+                    </button>
+                    <% } %>
+                </td>
+              </tr>
+                        
+          </tbody>
+        <% }) %>
+        
+      </table>
+    </div>
+  </div>
+</section>
+<script>
+$(document).ready(function () {
+    $('#bannerTable').DataTable({
+      responsive:true
+    })
+})
+function disableBanner(id) {
+  $.ajax({
+    url: '/admin/disableBanner/' + id,
+    method: 'put',
+    success: (response) => {     
+        if (response) {
+            $(`#${id}enable`).html('Disable').css('background-color', 'rgb(205, 55, 55)')
+            $(`#${id}disable`).html('Disable').css('background-color', 'rgb(205, 55, 55)')
+            $(`#${id}active`).html('Enabled').css('color', 'rgb(33, 141, 33)').removeClass('alert-danger').addClass('alert-success')
+            toastr.success('Category Enabled')
+          }
+          else {
+            $(`#${id}disable`).html('Enable').css('background-color', 'rgb(33, 141, 33)')
+            $(`#${id}enable`).html('Enable').css('background-color', 'rgb(33, 141, 33)')
+            $(`#${id}active`).html('Disabled').css('color', 'rgb(205, 55, 55)').removeClass('alert-success').addClass('alert-danger')
+            toastr.error('Category Disabled')
+          }
+      }
+    } 
+  )
+}
+toastr.options = {
+  debug: false,
+  newestOnTop: false,
+  positionClass: 'toast-top-right',
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: '300',
+  hideDuration: '1000',
+  timeOut: '2000',
+  extendedTimeOut: '1000',
+  showEasing: 'swing',
+  hideEasing: 'swing',
+  showMethod: 'fadeIn',
+  hideMethod: 'fadeOut'
+}
+</script>

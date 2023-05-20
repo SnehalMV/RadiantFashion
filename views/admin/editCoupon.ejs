@@ -1,0 +1,157 @@
+<h1 class="text-center me-3 mt-5 d-block" style="color: darkslategrey;">Edit Coupon</h1>
+<div class="container mt-5 d-block justify-content-center">
+  <form action="/admin/editCoupon/<%= coupon._id %>" method="post" style="min-width:  30vw; max-width: 40vw;" id="couponEdit">
+    <div class="mb-3">
+      <label class="form-label">Coupon Code</label>
+      <input type="name" class="form-control" id="code" value="<%= coupon.code %>" name="code" onkeyup="return codeValidate()" required>
+      <span id="code-error" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Coupon Description</label>
+      <textarea name="description" class="form-control" id="description"
+        style="min-height: 17vh;" onkeyup="return descValidate()"><%= coupon.description %></textarea>
+      <span id="description-error" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Min Price</label>
+      <input type="text" class="form-control" value="<%= coupon.minPrice %>" name="price" id="price"
+        onkeyup=" return priceValidate()" required>
+      <span id="price-error" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Coupon Percentage</label>
+      <input type="text" class="form-control" name="percentage" value="<%= coupon.offerPercentage %>" id="percentage"
+        onkeyup=" return percentageValidate()" required>
+      <span id="percentage-error" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Max Off</label>
+      <input type="text" class="form-control" id="maxOff" name="maxOff" value="<%= coupon.maxOff %>"
+        onkeyup="return offValidate()" required>
+      <span id="off-error" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Expiry Date</label>
+      <input type="date" id="expiryDate" name="expiryDate" max="2024-01-01" required>
+    </div>
+    <div class="mb-3">
+
+    </div>
+    <button type="submit" class="btn btn-primary mt-4">Submit</button>
+
+  </form>
+  <span id="form-error" class="text-danger"></span>
+</div>
+<script>
+  const date = new Date("<%= coupon.expiry %>");
+  const formattedDate = date.toISOString().substr(0, 10);
+  document.getElementById("expiryDate").value = formattedDate;
+</script>
+<script>
+  function codeValidate(){
+        const regCode = /^[a-zA-Z]+(\s[a-zA-Z]+)*$/
+        const code = document.getElementById('code').value;
+        if(!regCode.test(code)){
+            document.getElementById('code-error').innerHTML = 'Enter Valid Coupon Code'
+            return false;
+        }else{
+            document.getElementById('code-error').innerHTML = ''
+            return true;
+        }
+    }
+
+    function descValidate() {
+        const regDesc = /^[a-zA-Z]+(\s[a-zA-Z]+)*$/
+        const desc = document.getElementById('description').value;
+        if(!regDesc.test(desc)){
+            document.getElementById('description-error').innerHTML = 'Enter Proper Description'
+            return false;
+        }else{
+            document.getElementById('description-error').innerHTML = ''
+            return true;
+        }
+    }
+
+    function priceValidate(){
+        const regPrice = /^[1-9]\d*$/
+        const price = document.getElementById('price').value;
+        if(!regPrice.test(price)){
+            document.getElementById('price-error').innerHTML = 'Enter Valid Mininum Price'
+            return false;
+        }else{
+            document.getElementById('price-error').innerHTML = ''
+            return true;
+        }
+    }
+
+    function percentageValidate(){
+        const regPercentage = /^(100|[1-9][0-9]?)$/
+        const percentage = document.getElementById('percentage').value;
+        if(!regPercentage.test(percentage)){
+            document.getElementById('percentage-error').innerHTML = 'Enter Valid Percentage'
+            return false;
+        }else{
+            document.getElementById('percentage-error').innerHTML = ''
+            return true;
+        }
+    }
+
+    function offValidate(){
+        const regOff = /^[1-9]\d*$/
+        const off = document.getElementById('maxOff').value;
+        if(!regOff.test(off)){
+            document.getElementById('off-error').innerHTML = 'Enter Valid Maximum Discount Price'
+            return false;
+        }else{
+            document.getElementById('off-error').innerHTML = ''
+            return true;
+        }
+    }
+
+    const priceInput = document.getElementById('price');
+    priceInput.addEventListener('input', event => {
+        const input = event.target.value;
+        const numericInput = input.replace(/[^0-9]/g, '');
+        event.target.value = numericInput;
+    })
+
+    const percentageInput = document.getElementById('percentage');
+    percentageInput.addEventListener('input', event => {
+        const input = event.target.value;
+        const numericInput = input.replace(/[^0-9]/g, '');
+        event.target.value = numericInput;
+    })
+
+    const offInput = document.getElementById('maxOff');
+    offInput.addEventListener('input', event => {
+        const input = event.target.value;
+        const numericInput = input.replace(/[^0-9]/g, '');
+        event.target.value = numericInput;
+    })
+    
+    const form = document.getElementById('couponForm')
+    form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (formValidate()) {
+      form.submit()
+    } else {
+      document.getElementById('form-error').innerHTML = 'Please Check All The Fields'
+    }
+  })
+
+    function formValidate(){
+        if(codeValidate() && descValidate() && priceValidate() && percentageValidate() && offValidate() ){
+            return true
+        }else{
+            return false
+        }
+    }
+</script>
+<script>
+  $(document).ready(function () {
+    const today = new Date();
+    const formattedDate = today.toISOString().substring(0, 10);
+    document.getElementById("expiryDate").value = formattedDate;
+    document.getElementById("expiryDate").min = formattedDate;    
+  })
+</script>

@@ -1,0 +1,104 @@
+<div class="d-flex justify-content-center align-items-center container mt-3">
+  <div class="card py-5 px-3" id="otpcard">
+    <form action="/otpverify", method="post">
+      <h5 class="m-0">Mobile phone verification</h5><span class="mobile-text">Enter the code we just send to your mobile phone <b class="" style="color: #c96;"><%= locals.response %></b></span>
+      <div class="d-flex flex-row mt-5"><input type="text" class="form-control" autofocus="" name="OTP">
+      </div>
+      <span id="number-error" class="text-danger">
+        <%= locals.invalid %>
+      </span>
+      <div>
+        <button type="submit" class="btn btn-outline-primary-2">
+          <span>LOG IN</span>
+          <i class="icon-long-arrow-right"></i>
+        </button>
+        <button type="button" class="btn btn-outline-primary-2" id="resendBtn">
+      <span id="countdown" class="">00:30</span>
+          <i class="icon-long-arrow-right"></i>
+      </button>
+      </div>
+    </form>
+      
+  </div>
+</div>
+
+
+<style>
+  #otpcard {
+  width: 40vw;
+  padding: 5vw;
+  background: #fff;
+  border: none;
+  height: 40vh;
+  position: relative;
+}
+
+
+body {
+  background: #eee;
+}
+
+.mobile-text {
+  color: #989696b8;
+  font-size: 15px;
+}
+
+.form-control {
+  margin-right: 12px;
+}
+
+.form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #ff8880;
+  outline: 0;
+  box-shadow: none;
+}
+
+.cursor {
+  cursor: pointer;
+}
+</style>
+<script>
+  $(document).ready(function(){
+    $('#resendBtn').click(function(){
+      $.ajax({
+      url:'/otplogin',
+      method:'post',
+      success:function(){
+        location.reload()
+      }
+    })
+    })
+
+  })
+</script>
+<script>
+  $(document).ready(function(){
+    $('#resendBtn').prop('disabled', 'true')
+    setTimeout(function(){
+      $('#resendBtn').prop('disabled', 'false')
+    },30000)
+  })
+</script>
+<script>
+  // Get the countdown div element
+const countdownDiv = document.getElementById("countdown");
+
+// Set the initial time to 30 seconds
+let seconds = 30;
+
+// Update the countdown every second
+const countdownInterval = setInterval(() => {
+  seconds--;
+  const formattedTime = `00:${seconds.toString().padStart(2, "0")}`;
+  countdownDiv.textContent = formattedTime;
+  
+  // Stop the countdown when it reaches 0
+  if (seconds === 0) {
+    clearInterval(countdownInterval);
+    countdownDiv.textContent = "Resend OTP";
+  }
+}, 1000);
+
+</script>

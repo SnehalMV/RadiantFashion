@@ -1,0 +1,85 @@
+<h1 class="text-center me-3 mt-5 d-block" style="color: darkslategrey;">Add Banner</h1>
+<div class="container mt-5 d-block justify-content-center">
+  <form action="/admin/addBanner" method="post" style="min-width:  30vw; max-width: 40vw;" id="couponForm" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label class="form-label">Name</label>
+      <input type="name" class="form-control" id="name" name="name" onkeyup="return nameValidate()" required>
+      <span id="name-error" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Banner Title</label>
+      <input type="text" class="form-control" id="title" name="title" onkeyup="return titleValidate()" required>
+      <span id="title-error" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Banner Subtitle</label>
+      <input type="text" class="form-control" id="subtitle" name="subtitle" onkeyup="return subtitleValidate()" required>
+      <span id="subtitle-error" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Image</label>
+      <input type="file" class="form-control" name="image" id="image" required>
+      <span id="image-error" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4">Submit</button>
+    
+  </form>
+  <span id="form-error" class="text-danger"></span>
+</div>
+<script>
+  function nameValidate(){
+        const regName = /^[a-zA-Z]+(\s[a-zA-Z]+)*$/
+        const name = document.getElementById('name').value;
+        if(!regName.test(name)){
+            document.getElementById('name-error').innerHTML = 'Enter Valid Banner Name'
+            return false;
+        }else{
+            document.getElementById('name-error').innerHTML = ''
+            return true;
+        }
+    }
+    function titleValidate(){
+        const regTitle = /^[a-zA-Z' ]+$/
+        const title = document.getElementById('title').value;
+        if(!regTitle.test(title)){
+            document.getElementById('title-error').innerHTML = 'Enter Valid Banner Title'
+            return false;
+        }else{
+            document.getElementById('title-error').innerHTML = ''
+            return true;
+        }
+    }
+
+    function subtitleValidate(){
+        const regSub = /^[a-zA-Z' ]+$/
+        const sub = document.getElementById('subtitle').value;
+        if(!regSub.test(sub)){
+            document.getElementById('subtitle-error').innerHTML = 'Enter Valid Banner Subtitle'
+            return false;
+        }else{
+            document.getElementById('subtitle-error').innerHTML = ''
+            return true;
+        }
+    }
+
+    
+    
+    const form = document.getElementById('couponForm')
+    form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (formValidate()) {
+      form.submit()
+    } else {
+      document.getElementById('form-error').innerHTML = 'Please Check All The Fields'
+    }
+  })
+
+    function formValidate(){
+        if(nameValidate() && titleValidate() && subtitleValidate){
+            return true
+        }else{
+            return false
+        }
+    }
+</script>

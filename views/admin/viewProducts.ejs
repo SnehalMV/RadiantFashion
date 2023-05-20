@@ -1,0 +1,60 @@
+
+<section>
+  <a href="/admin/addProduct">
+    <button type="button " class="btn btn-secondary float-end mb-3" style="background-color: rgb(33, 141, 33);">Add Product</button>
+  </a>
+  <div class="container mt-3">
+    <div class="container">
+      <table class="table table-hover" id="productTable" style="min-width: 70vw;">
+        <thead>
+          <tr>
+            <!-- <th scope="col">#</th> -->
+            <th scope="col">Name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Images</th>
+            <th>Options</th>
+          </tr>
+        </thead>
+        
+        <tbody>
+          <% products.forEach(product => { %>
+          <tr>
+            <td><%= product.name %></td>
+            <td><%= product.category %></td>
+            <td><%= product.price %></td>
+            <td id="quantityCol"><%= product.quantity %></td>
+            <td>
+              <img style=" max-width: 3rem;" src="/images/<%= product.Images[0] %>" id="productImage1" name="productImage1"/>
+              <img style=" max-width: 3rem;" src="/images/<%= product.Images[1] %>" id="productImage2"/>
+              <img style=" max-width: 3rem;" src="/images/<%= product.Images[2] %>" id="productImage3"/>
+              <img style=" max-width: 3rem;" src="/images/<%= product.Images[3] %>" id="productImage3"/>
+            </td>
+            <td>
+       
+              <a href="/admin/editProduct/<%= product._id %>" style="text-decoration: none;">
+                <button type="button " class="btn btn-primary me-2" id="deleteButton">Edit</button>
+              </a>
+              <% if(product.quantity) { %>
+                <a href="/admin/deleteProduct/<%= product._id %>">
+                    <button  type="button " class="btn btn-secondary" onclick="return confirm('Are you sure you want to delete this product?') " style="background-color: rgb(205, 55, 55);">Delete</button>
+                </a>
+              <% } %>
+           
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+        
+      </table>
+    </div>
+  </div>
+</section>
+<script>
+$(document).ready(function () {
+    $('#productTable').DataTable({
+      responsive:true
+    })
+})
+</script>

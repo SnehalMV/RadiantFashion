@@ -1,0 +1,103 @@
+<section class="ms-5">
+  <a href="/admin/addCategory">
+    <button type="button " class="btn btn-primary float-end mb-3 " style="background-color: rgb(33, 141, 33);">Add
+      Category</button>
+  </a>
+  <div class="container mt-3 ">
+    <div class="container">
+      <table class="table table-hover" id="categoryTable" style="min-width: 64vw; max-width: 80vw;">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col" style="text-align: center;">Status</th>
+
+            <th>Options</th>
+          </tr>
+        </thead>
+        <div class="card-body">
+          <tbody>
+            <% categories.forEach(category=> { %>
+              <tr>
+                <td>
+                  <%= category.name %>
+                </td>
+                <% if(category.active) { %>
+                  <td style="text-align: center;"><span id="<%= category._id %>active" style="color: rgb(33, 141, 33); min-width: 4vw; max-width: 4vw;"
+                      class="badge rounded-pill alert-success">Enabled</span></td>
+                  <% } else { %>
+                    <td style="text-align: center; "><span id="<%= category._id %>active" style="color: rgb(205, 55, 55); min-width: 4vw; max-width: 4vw; "
+                        class="badge rounded-pill alert-danger">Disabled</span></td>
+                    <% } %>
+  
+                      <td>
+                        <a href="/admin/editCategory/<%= category._id %>" style="text-decoration: none;">
+                          <button type="button " class="btn btn-primary me-2" id="Button">
+                            Edit</button>
+                        </a>
+                        <% if(category.active) { %>
+  
+  
+                          <button id="<%= category._id %>disable" type="button" data-value="<%= category._id %>"
+                            class="btn btn-primary disableButton" style="background-color: rgb(205, 55, 55); min-width: 10vw; max-width: 10vw;">
+                            Disable
+                          </button>
+                          </a>
+                          <% } else { %>
+  
+                            <button id="<%= category._id %>enable" type="button" data-value="<%= category._id %>"
+                              class="btn btn-primary  disableButton" style="background-color: rgb(33, 141, 33); min-width: 10vw; max-width: 10vw;">
+                              Enable
+                            </button>
+                            </a>
+                            <% } %>
+                      </td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </div>
+
+      </table>
+    </div>
+  </div>
+</section>
+<script>
+  $(document).ready(function () {
+    $('#categoryTable').DataTable({
+      responsive: true,
+      "columns": [
+        null,
+        { "width": "23vw"},
+        null
+
+      ]
+    })
+  })
+</script>
+<script>
+  $(document).ready(function () {
+    $(".disableButton").click(function () {
+      const catId = $(this).data("value");
+      $.ajax({
+        type: "put",
+        url: "/admin/categorylist/" + catId
+      })
+        .done((res) => {
+          if (res) {
+            $(`#${catId}enable`).html('Disable').css('background-color', 'rgb(205, 55, 55)')
+            $(`#${catId}disable`).html('Disable').css('background-color', 'rgb(205, 55, 55)')
+            $(`#${catId}active`).html('Enabled').css('color', 'rgb(33, 141, 33)').removeClass('alert-danger').addClass('alert-success')
+            toastr.success('Category Enabled')
+          }
+          else {
+            $(`#${catId}disable`).html('Enable').css('background-color', 'rgb(33, 141, 33)')
+            $(`#${catId}enable`).html('Enable').css('background-color', 'rgb(33, 141, 33)')
+            $(`#${catId}active`).html('Disabled').css('color', 'rgb(205, 55, 55)').removeClass('alert-success').addClass('alert-danger')
+            toastr.error('Category Disabled')
+          }
+        })
+        .fail((err) => {
+          console.log(err.responseJSON.error);
+        });
+    });
+  });
+</script>

@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="form-box" style="box-shadow: none; max-width: none;">
+    <div class="form-tab">
+        <ul class="nav nav-pills nav-fill" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Sign In</a>
+            </li>
+        
+        </ul>
+        <div class="tab-content" id="tab-content-5">
+            <div class="tab-pane fade show active" id="signin" role="tabpanel" aria-labelledby="signin-tab">
+                <form action = "/login" method = "post">
+                    <div class="form-group">
+                        <label for="singin-email">E-mail address *</label>
+                        <input type="text" class="form-control" id="singin-email" name="email" required>
+                    </div><!-- End .form-group -->
+  
+                    <div class="form-group">
+                        <label for="singin-password">Password *</label>
+                        <input type="password" class="form-control" id="singin-password" name="password" required>
+                        <span id="login-error" class="text-danger"><%= locals.invalid %></span>
+                    </div><!-- End .form-group -->
+  
+                    <div class="form-footer" >
+                        
+                          <button type="submit" class="btn btn-outline-primary-2">
+                              <span>LOG IN</span>
+                              <i class="icon-long-arrow-right"></i>
+                          </button>
+                          <a href="/otplogin">
+                            <button type="button" class="btn btn-outline-primary-2">
+                                <span>LOG IN USING OTP</span>
+                                <i class="icon-long-arrow-right"></i>
+                              </button>
+                          </a>
+                          
+                        <a href="/forgot-password" class="forgot-link" >Forgot Your Password?</a>
+                        
+  
+                        
+        </div><!-- End .form-footer -->
+                </form>
+                <a href="/signup" >
+                  <button type="submit" class="btn btn-outline-dark-2 mt-2">
+                      <span>SIGN UP</span>
+                      <i class="icon-long-arrow-right"></i>
+                  </button>
+              </a><!-- End .custom-checkbox -->
+               
+            </div><!-- .End .tab-pane -->
+  
+        </div><!-- End .tab-content -->
+    </div><!-- End .form-tab -->
+  </div><!-- End .form-box -->
+</div>
