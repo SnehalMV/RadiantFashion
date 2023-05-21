@@ -6,6 +6,7 @@ const { addProduct, viewProducts, editProduct, setProduct, deleteProduct } = req
 
 module.exports = {
 
+  // Middleware for Admin Authentication
   adminAuth: (req, res, next) => {
     if (req.session.admin) {
       next()
@@ -14,6 +15,7 @@ module.exports = {
     }
   },
 
+  // Display Admin Login
   getAdminLogin: (req, res) => {
     if (req.session.admin) {
       res.redirect('/admin/dashboard')
@@ -22,6 +24,7 @@ module.exports = {
     }
   },
 
+  // Display Dashboard
   getDash: (req, res) => {
     getOrderHistory().then((response) => {
       const orderDetails = response
@@ -29,6 +32,7 @@ module.exports = {
     })
   },
 
+  // Display Add Product Page
   getAddProducts: (req, res) => {
     viewCategories().then((response) => {
       const categories = response
@@ -38,6 +42,7 @@ module.exports = {
     })
   },
 
+  // Display Table of All Products
   getViewProducts: (req, res) => {
     viewProducts().then((response) => {
       const products = response
@@ -47,6 +52,7 @@ module.exports = {
     })
   },
 
+  // Display Table of All Users
   getUserList: (req, res) => {
     viewUsers().then((response) => {
       const users = response
@@ -56,11 +62,13 @@ module.exports = {
     })
   },
 
+  // Call User Block Function
   putBlockUser: (req, res) => {
     const userId = req.params.id
     blockUser(userId, res)
   },
 
+  // Controller to Intiate Session after Admin Login
   postAdminLogin: (req, res) => {
     adminLogin(req.body).then((response) => {
       req.session.admin = response.adminUser
@@ -71,6 +79,7 @@ module.exports = {
     })
   },
 
+  // Controller to Add Product to Database
   postAddProducts: (req, res) => {
     const files = req.files
     const filename = files.map((file) => {
@@ -83,6 +92,7 @@ module.exports = {
     })
   },
 
+  // Display Edit Product Page
   getEditProduct: (req, res) => {
     const id = req.params.id
     editProduct(id).then((response) => {
@@ -96,6 +106,7 @@ module.exports = {
     })
   },
 
+  // Controller to Edit Product within Database with Product ID
   postEditProduct: (req, res) => {
     const product = req.body
     const id = req.params.id
@@ -113,11 +124,13 @@ module.exports = {
     })
   },
 
+  // Admin Logout
   getLogout: (req, res) => {
     req.session.admin = null
     res.redirect('/admin')
   },
 
+  // Controller to Soft Delete Product
   getDeleteProduct: (req, res) => {
     const id = req.params.id
     deleteProduct(id).then(() => {
@@ -125,6 +138,7 @@ module.exports = {
     })
   },
 
+  // Display Table of All Categories
   getCategoryList: (req, res) => {
     viewCategories().then((categories) => {
       res.render('admin/viewCategory', { layout, categories })
@@ -133,10 +147,12 @@ module.exports = {
     })
   },
 
+  // Display Add Categories
   getAddCategory: (req, res) => {
     res.render('admin/addCategory', { layout })
   },
 
+  // Controller to Add Category To Database
   postAddCategory: (req, res) => {
     const category = req.body.name
     addCategory(category).then((addedCat) => {
@@ -147,11 +163,13 @@ module.exports = {
     })
   },
 
+  // Controller to Disable Categories
   putDisableCategory: (req, res) => {
     const id = req.params.id
     disableCategory(id, res)
   },
 
+  // Display Table of All Orders
   getOrderList: (req, res) => {
     getOrderHistory().then((response) => {
       const orderDetails = response
@@ -159,6 +177,7 @@ module.exports = {
     })
   },
 
+  // Display Table of All Coupons
   getCouponList: (req, res) => {
     viewCoupons().then((response) => {
       const coupons = response
@@ -168,10 +187,12 @@ module.exports = {
     })
   },
 
+  // Display Add Coupon Page
   getAddCoupon: (req, res) => {
     res.render('admin/addCoupon', { layout })
   },
 
+  // Controller to Add Coupon to Database
   postAddCoupon: (req, res) => {
     const coupon = req.body
     addCoupon(coupon).then((response) => {
@@ -182,6 +203,7 @@ module.exports = {
     })
   },
 
+  // Display Edit Coupon Page
   getEditCoupon: (req, res) => {
     const id = req.params.id
     editCoupon(id).then((response) => {
@@ -192,6 +214,7 @@ module.exports = {
     })
   },
 
+  // Controller to Edit Coupon within Database with Coupon ID
   postEditCoupon: (req, res) => {
     const id = req.params.id
     const coupon = req.body
@@ -200,6 +223,7 @@ module.exports = {
     })
   },
 
+  // Controller to Delete Coupon
   putDeleteCoupon: (req, res) => {
     const id = req.params.id
     deleteCoupon(id).then(() => {
@@ -207,6 +231,7 @@ module.exports = {
     })
   },
 
+  // Controler to Change Order Status
   postChangeOrderStatus: (req, res) => {
     const status = req.body.status
     const id = req.body.orderId
@@ -216,6 +241,7 @@ module.exports = {
     })
   },
 
+  // Display Table of All Banners
   getBannerList: (req, res) => {
     getBanners().then((response) => {
       const banners = response
@@ -223,10 +249,12 @@ module.exports = {
     })
   },
 
+  // Display Add Banner Page
   getAddBanner: (req, res) => {
     res.render('admin/addBanner', { layout })
   },
 
+  // Controller to Add Banner to Database
   postAddBanner: (req, res) => {
     const banner = req.body
     const image = req.file.filename
@@ -235,6 +263,7 @@ module.exports = {
     })
   },
 
+  // Disable Banner
   putDisableBanner: (req, res) => {
     const id = req.params.id
     changeBannerStatus(id).then((status) => {
@@ -242,6 +271,7 @@ module.exports = {
     })
   },
 
+  // Display Edit Banner Page
   getEditBanner: (req, res) => {
     const id = req.params.id
     editBanner(id).then((banner) => {
@@ -249,6 +279,7 @@ module.exports = {
     })
   },
 
+  // Controller to Edit Banner within Database with Banner ID
   postEditBanner: (req, res) => {
     const id = req.params.id
     const image = req.file.filename
