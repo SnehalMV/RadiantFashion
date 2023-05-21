@@ -31,7 +31,7 @@ router.route('/')
   .get(getAdminLogin)
   .post(postAdminLogin)
 
-// Routes for Admin Pages
+// Routes for Dashboard
 router.get('/dashboard', adminAuth, getDash)
 router.route('/addProduct')
   .get(adminAuth, getAddProducts)
