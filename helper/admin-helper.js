@@ -15,6 +15,7 @@ const adminPass = process.env.ADMIN_PASS
 
 module.exports = {
 
+  //  Helper to Verify Admin Authentication
   adminLogin: (admin) => {
     return new Promise((resolve, reject) => {
       if (adminUser === admin.email && adminPass === admin.password) {
@@ -25,6 +26,7 @@ module.exports = {
     })
   },
 
+  // Helper to List All Users in Database
   viewUsers: () => {
     return new Promise(async (resolve, reject) => {
       const users = await userModel.find({})
@@ -36,6 +38,7 @@ module.exports = {
     })
   },
 
+  // Block User Function
   blockUser: async (id, res) => {
     try {
       const user = await userModel.findOne({ _id: id })
@@ -47,6 +50,7 @@ module.exports = {
     }
   },
 
+  // Add Category to Database
   addCategory: (category) => {
     return new Promise((resolve, reject) => {
       categoryModel.findOne({ name: category }).then((exists) => {
@@ -63,6 +67,7 @@ module.exports = {
     })
   },
 
+  // Helper to List All Categories in Database
   viewCategories: () => {
     return new Promise((resolve, reject) => {
       categoryModel.find({}).then((response) => {
@@ -75,6 +80,7 @@ module.exports = {
     })
   },
 
+  // Disable Category Function
   disableCategory: async (id, res) => {
     try {
       const category = await categoryModel.findOne({ _id: id })
@@ -86,6 +92,7 @@ module.exports = {
     }
   },
 
+  // Display All Orders in Database
   getOrderHistory: () => {
     return new Promise((resolve, reject) => {
       orderModel.find({}).populate('userId').then((response) => {
@@ -95,6 +102,7 @@ module.exports = {
     })
   },
 
+  // Helper to List All Coupons in Database
   viewCoupons: () => {
     return new Promise((resolve, reject) => {
       couponModel.find({}).then((response) => {
@@ -110,6 +118,7 @@ module.exports = {
     })
   },
 
+  // Add Coupon in Database
   addCoupon: (coupon) => {
     return new Promise(async (resolve, reject) => {
       const exists = await couponModel.findOne({ code: coupon.code })
@@ -131,6 +140,7 @@ module.exports = {
     })
   },
 
+  // Helper to retrieve Coupon for Edit Using Coupon ID
   editCoupon: (id) => {
     return new Promise((resolve, reject) => {
       couponModel.findById(id).then((response) => {
@@ -143,6 +153,7 @@ module.exports = {
     })
   },
 
+  // Helper to Edit Coupon in Database using Coupon ID
   setCoupon: (id, coupon) => {
     return new Promise((resolve, reject) => {
       couponModel.findByIdAndUpdate(id, {
@@ -160,6 +171,7 @@ module.exports = {
     })
   },
 
+  // Delete Coupon Function
   deleteCoupon: (id) => {
     return new Promise((resolve, reject) => {
       couponModel.findByIdAndDelete(id).then(() => {
@@ -168,6 +180,7 @@ module.exports = {
     })
   },
 
+  // Helper to Change Order Status using Order ID
   changeOrderStatus: (id, orderStatus, userId) => {
     return new Promise(async (resolve, reject) => {
       const order = await orderModel.findById(id)
@@ -188,6 +201,7 @@ module.exports = {
     })
   },
 
+  // Add Banner in Database
   addBannerHelper: (banner, image) => {
     return new Promise((resolve, reject) => {
       bannerModel.findOne({ bannerName: banner.name }).then((exists) => {
@@ -207,6 +221,7 @@ module.exports = {
     })
   },
 
+  // Helper to List all Banners in Database
   getBanners: () => {
     return new Promise((resolve, reject) => {
       bannerModel.find().then((response) => {
@@ -219,6 +234,7 @@ module.exports = {
     })
   },
 
+  // Disable Banner Function
   changeBannerStatus: (bannerId) => {
     return new Promise(async (resolve, reject) => {
       const banner = await bannerModel.findOne({ _id: bannerId })
@@ -229,6 +245,7 @@ module.exports = {
     })
   },
 
+  // Helper to retrieve Banner to edit using Banner ID
   editBanner: (id) => {
     return new Promise((resolve, reject) => {
       bannerModel.findById(id).then((response) => {
@@ -237,6 +254,7 @@ module.exports = {
     })
   },
 
+  // Helper to Edit Banner in Darabase using Banner ID
   setBanner: (id, banner, image) => {
     return new Promise((resolve, reject) => {
       bannerModel.findByIdAndUpdate(id, {
