@@ -50,7 +50,7 @@ module.exports = {
     )
   },
 
-  // Function to verify User Credentials 
+  // Function to verify User Credentials
   userLogin: (userData) => {
     return new Promise((resolve, reject) => {
       const response = {}
@@ -71,7 +71,7 @@ module.exports = {
     })
   },
 
-  // Bring all Products from Database 
+  // Bring all Products from Database
   viewProducts: () => {
     return new Promise(async (resolve, reject) => {
       const products = await productModel.find({})
@@ -94,7 +94,7 @@ module.exports = {
     })
   },
 
-  // Function to verify number and send OTP 
+  // Function to verify number and send OTP
   doOTPLogin: (phoneNumber) => {
     return new Promise((resolve, reject) => {
       userModel.findOne({ number: phoneNumber }).then((user) => {
@@ -163,7 +163,7 @@ module.exports = {
     })
   },
 
-  // Function to retrieve all Products within Cart 
+  // Function to retrieve all Products within Cart
   getCartProducts: (userIdParam) => {
     return new Promise((resolve, reject) => {
       cartModel.findOne({ userId: userIdParam }).populate('cartProducts.productId').then((response) => {
@@ -286,7 +286,7 @@ module.exports = {
     })
   },
 
-  // Retrieve all Addresses of an User 
+  // Retrieve all Addresses of an User
   getAllAddresses: (user) => {
     return new Promise((resolve, reject) => {
       addressModel.findOne({ userId: user }).then((response) => {
@@ -421,7 +421,7 @@ module.exports = {
     })
   },
 
-  // Generate Razorpay 
+  // Generate Razorpay
   generateRazorpayOrder: (orderId, total) => {
     return new Promise((resolve, reject) => {
       const options = {
