@@ -6,6 +6,7 @@ const productModel = require('../models/product-model')
 const mongoose = require('mongoose')
 
 module.exports = {
+  // Add Product to Database
   addProduct: (product, fileName) => {
     return new Promise((resolve, reject) => {
       const newProduct = new productModel({
@@ -20,6 +21,7 @@ module.exports = {
     })
   },
 
+  // List all Products in Database
   viewProducts: () => {
     return new Promise(async (resolve, reject) => {
       const products = await productModel.find({})
@@ -31,6 +33,7 @@ module.exports = {
     })
   },
 
+  // Edit Product Details
   editProduct: (id) => {
     return new Promise((resolve, reject) => {
       productModel.findById(id).then((product) => {
@@ -41,6 +44,7 @@ module.exports = {
     })
   },
 
+  // Change Product Details within Database
   setProduct: (product, id, images) => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -65,6 +69,7 @@ module.exports = {
     })
   },
 
+  // Soft Delete a certain Product
   deleteProduct: (id) => {
     return new Promise((resolve, reject) => {
       productModel.updateOne({ _id: id },

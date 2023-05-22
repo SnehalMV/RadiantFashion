@@ -1,7 +1,7 @@
 const { userSignUp, userLogin, viewProducts, viewSingleProduct, doOTPLogin, verifyOTP, addToCart, getCartProducts, getCartCount, updateQuantity, deleteCartProduct, getCartTotal, addAddress, getAllAddresses, changeDefaultAddress, getDefaultAddress, placeOrderHelper, removeCartProducts, getCartDetails, getOrderDetails, cancelOrder, getOrderProducts, generateRazorpayOrder, verifyPayment, changePaymentStatus, getUserDetails, editUserDetails, viewCoupons, selectCouponHelper, getBanners, validateCoupon, changePassword, walletPayment } = require('../helper/user-helper')
 
 module.exports = {
-
+  // Middleware for User Login Authentication
   userAuth: (req, res, next) => {
     if (req.session.user) {
       next()
@@ -10,6 +10,7 @@ module.exports = {
     }
   },
 
+  // Display Home Page
   getHome: async (req, res) => {
     let cartCount = null
     const banners = await getBanners()
@@ -21,6 +22,7 @@ module.exports = {
     res.render('user/index', { banners })
   },
 
+  // Display User's Cart Page
   getCart: (req, res) => {
     const user = req.session.user
     let cartCount = null
@@ -39,6 +41,7 @@ module.exports = {
     })
   },
 
+  // Display Checkout Page
   getCheckout: async (req, res) => {
     const user = req.session.user
     const userDetails = await getUserDetails(user._id)
@@ -68,6 +71,7 @@ module.exports = {
     })
   },
 
+  // Display User's Wishlist Page
   getWishlist: async (req, res) => {
     let cartCount = null
     if (req.session.user) {
@@ -78,6 +82,7 @@ module.exports = {
     res.render('user/wishlist')
   },
 
+  // Display Shop Page showing all available Products
   getShop: async (req, res) => {
     let cartCount = null
     if (req.session.user) {
@@ -95,6 +100,7 @@ module.exports = {
     }
   },
 
+  // Display single Product Page using Product ID
   getProduct: (req, res) => {
     const id = req.params.id
     viewSingleProduct(id).then(async (response) => {
@@ -112,15 +118,18 @@ module.exports = {
     })
   },
 
+  // Display User Signup Page
   getSignup: (req, res) => {
     res.render('user/signup')
   },
 
+  // Display User Login Page
   getLogin: (req, res) => {
     if (req.session.user) { res.redirect('/') }
     res.render('user/login')
   },
 
+  // Controller to add User to Database
   postSignup: (req, res) => {
     userSignUp(req.body).then((response) => {
       req.session.user = response
@@ -131,6 +140,7 @@ module.exports = {
     })
   },
 
+  // Controller to authenticate user and start Session
   postLogin: (req, res) => {
     userLogin(req.body).then((response) => {
       req.session.user = response.user
@@ -141,6 +151,7 @@ module.exports = {
     })
   },
 
+  // Display User's Profile Page
   getProfile: async (req, res) => {
     const user = req.session.user
     const userDetails = await getUserDetails(user._id)
@@ -155,10 +166,12 @@ module.exports = {
     })
   },
 
+  // Display Page to enter User Phone Number for OTP Login
   getNumber: (req, res) => {
     res.render('user/otplogin')
   },
 
+  // Verification of User's Number and to display Enter OTP Page 
   postNumber: (req, res) => {
     const number = req.body.number
     req.session.number = req.body.number
@@ -170,6 +183,7 @@ module.exports = {
     })
   },
 
+  // Verification of Entered OTP
   postOTP: (req, res) => {
     const number = req.session.number
     const otp = req.body.OTP
@@ -184,6 +198,7 @@ module.exports = {
     })
   },
 
+  // Function to add Product to Cart
   addCart: (req, res) => {
     const userId = req.session.user._id
     const productId = req.params.id
@@ -194,17 +209,20 @@ module.exports = {
     })
   },
 
+  // Function to Delete session 
   getLogout: (req, res) => {
     req.session.user = null
     res.redirect('/')
   },
 
+  // Function to change Product Quantity within Cart
   changeProductQuantity: (req, res) => {
     updateQuantity(req.body).then(() => {
       res.json({ status: true })
     })
   },
 
+  // Funtion to remove Product from Cart
   deleteCartItem: (req, res) => {
     const userId = req.session.user._id
     const productId = req.params.id
@@ -212,12 +230,15 @@ module.exports = {
       res.redirect('/cart')
     })
   },
+
+  // Display Add Address Page
   getAddAddress: async (req, res) => {
     const user = req.session.user
     const cartCount = await getCartCount(req.session.user._id)
     res.render('user/addAddress', { user, cartCount })
   },
 
+  // Function to add Address to Database
   postAddAddress: (req, res) => {
     const user = req.session.user._id
     const address = req.body
@@ -229,6 +250,7 @@ module.exports = {
     })
   },
 
+  // Function to change Default Status of Addresses
   changeAddress: (req, res) => {
     const addressId = req.params.id
     const userId = req.session.user._id
@@ -237,6 +259,7 @@ module.exports = {
     })
   },
 
+  // Function to create Order 
   placeOrder: (req, res) => {
     const order = req.body
     const user = req.session.user
@@ -260,12 +283,14 @@ module.exports = {
     })
   },
 
+  // Function to Empty the whole Cart
   removeCartItems: (req, res) => {
     removeCartProducts(req.session.user._id).then(() => {
       res.redirect('/cart')
     })
   },
 
+  // Display table listing the Order History of the User
   getOrderHistory: async (req, res) => {
     if (req.session.user) {
       const user = req.session.user
@@ -276,6 +301,7 @@ module.exports = {
     }
   },
 
+  // Function to change the Status of an Order to Either Returned or Cancelled
   putCancelOrder: (req, res) => {
     const id = req.params.id
     const status = req.body.status
@@ -285,6 +311,7 @@ module.exports = {
     })
   },
 
+  // Display Single Order Details Page using Order ID
   singleOrderDetails: async (req, res) => {
     const user = req.session.user
     const orderId = req.params.id
@@ -297,12 +324,14 @@ module.exports = {
     })
   },
 
+  // Display Order Placed Page 
   getOrderPlaced: (req, res) => {
     const user = req.session.user
     const cartCount = 0
     res.render('user/order-placed', { user, cartCount })
   },
 
+  // Function to verify Razorpay
   postRazorpay: (req, res) => {
     verifyPayment(req.body).then(() => {
       changePaymentStatus(req.body['order[receipt]']).then(() => {
@@ -313,6 +342,7 @@ module.exports = {
     })
   },
 
+  // Function to edit User Details in Database
   editUser: (req, res) => {
     const user = req.session.user
     const userDetails = req.body
@@ -321,6 +351,7 @@ module.exports = {
     })
   },
 
+  // Function to select a specific Coupon from Coupon Div
   selectCoupon: (req, res) => {
     const id = req.body.id
     const user = req.session.user._id
@@ -331,6 +362,7 @@ module.exports = {
     })
   },
 
+  // Function to Validate Selected Coupon
   postValidateCoupon: (req, res) => {
     const code = req.body.code
     const user = req.session.user._id
@@ -341,10 +373,12 @@ module.exports = {
     })
   },
 
+  // Display Page to enter Number for Forgot Password
   getForgotPassword: (req, res) => {
     res.render('user/forgot-password')
   },
 
+  // Verify Phone Number and Display Enter OTP Page
   postForgotPassword: (req, res) => {
     const number = req.body.number
     req.session.number = number
@@ -356,6 +390,7 @@ module.exports = {
     })
   },
 
+  // Verify the entered OTP using Twillio and Display Change Password Page
   postForgotOtp: (req, res) => {
     const number = req.session.number
     const otp = req.body.OTP
@@ -369,6 +404,7 @@ module.exports = {
     })
   },
 
+ // Change the password within Database with New Password
   postPasswordChange: (req, res) => {
     const password = req.body.newPass
     const number = req.session.number
