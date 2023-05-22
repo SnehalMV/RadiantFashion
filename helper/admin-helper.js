@@ -268,5 +268,31 @@ module.exports = {
         resolve()
       })
     })
+  },
+
+  // Controller to sent Data to Sales Graph in Dashboard
+  getSalesPerMonth: () => {
+    return new Promise((resolve, reject) => {
+      orderModel.find({}).then(async (Order) => {
+        if (Order) {
+          const placedCount = await orderModel.count({ status: 'Placed' })
+          const pendingCount = await orderModel.count({ status: 'Pending' })
+          const returnedCount = await orderModel.count({ status: 'Returned' })
+          const deliveredCount = await orderModel.count({ status: 'Delivered' })
+          const cancelledCount = await orderModel.count({ status: 'Cancelled' })
+
+          const data = {
+            placedCount,
+            pendingCount,
+            returnedCount,
+            deliveredCount,
+            cancelledCount
+          }
+          resolve(data)
+        } else {
+          resolve(null)
+        }
+      })
+    })
   }
 }
