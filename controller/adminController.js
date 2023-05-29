@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 const layout = 'layouts/adminLayout'
 const express = require('express')
-const { viewUsers, adminLogin, blockUser, addCategory, viewCategories, disableCategory, getOrderHistory, viewCoupons, addCoupon, editCoupon, setCoupon, deleteCoupon, changeOrderStatus, addBannerHelper, getBanners, changeBannerStatus, editBanner, setBanner, getSalesPerMonth } = require('../helper/admin-helper')
+const { viewUsers, adminLogin, blockUser, addCategory, viewCategories, disableCategory, getOrderHistory, viewCoupons, addCoupon, editCoupon, setCoupon, deleteCoupon, changeOrderStatus, addBannerHelper, getBanners, changeBannerStatus, editBanner, setBanner, getSalesPerMonth, getOrdersByDate } = require('../helper/admin-helper')
 const { addProduct, viewProducts, editProduct, setProduct, deleteProduct } = require('../helper/product-helper')
 const moment = require('moment')
 
@@ -27,7 +27,7 @@ module.exports = {
 
   // Display Dashboard
   getDash: async (req, res) => {
-    const sales = await getSalesPerMonth()
+    const sales = await getOrdersByDate()
     getOrderHistory().then((response) => {
       const orderDetails = response
       res.render('admin/index', { layout, orderDetails, sales })

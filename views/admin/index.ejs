@@ -16,10 +16,19 @@
 </div>
 <div class="row">
     <div class="container">
-        <div class="col-lg-9 mb-5">
-            <canvas id="salesChart" style="width:100%;max-width:900px"></canvas>
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <article class="card-body">
+                    <h5 class="card-title">Order statitics</h5>
+                    <select id="chart-filter2">
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
+                    <canvas id="orderStats" height="120rem"></canvas>
+                </article>
+            </div>
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-4">
 
         </div>
     </div>
@@ -27,7 +36,7 @@
 
 <div class="card-body">
     <div class="table-responsive">
-        <div class="table-responsive">
+        
 
             <table class="table table-cart table-mobile display nowrap" id="salesTable">
                 <div class="d-flex">
@@ -162,26 +171,69 @@
     })
 </script>
 <script>
-    var xValues = [ 'placed', 'pending', 'returned', 'delivered', 'cancelled']
-    var yValues = ['<%=sales.placedCount%>', '<%=sales.pendingCount%>', '<%=sales.returnedCount%>','<%=sales.deliveredCount%>', '<%=sales.cancelledCount%>']
-    var barColors = ["red", "green","blue","orange","brown"];
-    
-    new Chart("salesChart", {
-      type: "bar",
-      data: {
-        labels: xValues,
-        datasets: [{
-          backgroundColor: barColors,
-          data: yValues
-        }]
-      },
-      options: {
-        legend: {display: false},
-        title: {
-          display: true,
-          text: "Status of Every Order"
-        }
-      }
-    });
+    if ($('#orderStats').length) {
+        const strigData = `<%- JSON.stringify(sales) %>`;
+        const orderData = JSON.parse(strigData);
+
+        var ctx = document.getElementById("orderStats").getContext('2d')
+        var orderChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [
+                    {
+                        label: "Orders",
+                        backgroundColor: "#5897fb",
+                        barThickness: 15,
+                        data: Array.from({ length: 12 }).map((_, index) => {
+                            const monthlyOrder = orderData.find(order => order._id.month === index + 1);
+                            return monthlyOrder ? monthlyOrder.count : 0;
+                        })
+                    }
+                ]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            usePointStyle: true,
+                        },
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        })
+
+        const filterSelect = document.getElementById('chart-filter2');
+        filterSelect.addEventListener('change', () => {
+            const filterValue = filterSelect.value;
+            if (filterValue === 'monthly') {
+                orderChart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                orderChart.data.datasets[0].data = Array.from({ length: 12 }).map((_, index) => {
+                    const monthlyOrder = orderData.find(order => order._id.month === index + 1);
+                    return monthlyOrder ? monthlyOrder.count : 0;
+                });
+                orderChart.update();
+            } else if (filterValue === 'yearly') {
+                const ordersByYear = orderData.reduce((acc, cur) => {
+                    const year = cur._id.year;
+                    const count = cur.count;
+                    if (year in acc) {
+                        acc[year] += count;
+                    } else {
+                        acc[year] = count;
+                    }
+                    return acc;
+                }, {});
+                const years = ['2021', '2022', '2023', '2024', '2025'];
+                orderChart.data.labels = years;
+                orderChart.data.datasets[0].data = years.map(year => ordersByYear[year] || 0);
+                orderChart.update();
+            }
+        })
+    }
 </script>
-    
