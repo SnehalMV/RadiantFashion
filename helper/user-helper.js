@@ -8,6 +8,7 @@
 const express = require('express')
 const userModel = require('../models/user-model')
 const productModel = require('../models/product-model')
+const categoryModel = require('../models/category-model')
 const cartModel = require('../models/cart-model')
 const addressModel = require('../models/address-model')
 const orderModel = require('../models/order-model')
@@ -19,6 +20,7 @@ const authToken = process.env.TWILIO_AUTHTOKEN
 const verifySid = process.env.TWILIO_VERIFYSID
 const client = require('twilio')(accountSid, authToken)
 const Razorpay = require('razorpay')
+const walletModel = require('../models/wallet-model')
 
 const instance = new Razorpay({
   key_id: process.env.RAZOR_PAY_KEYID,
@@ -392,16 +394,40 @@ module.exports = {
   cancelOrder: (id, oStatus, userId) => {
     return new Promise(async (resolve, reject) => {
       const order = await orderModel.findById(id)
+      const wallet = await walletModel.findOne({ userId })
       const wAmount = order.totalAmount
-      if ((order.paymentOption === 'COD' && order.status === 'Delivered') || (order.paymentOption === 'Razorpay')) {
-        await userModel.findByIdAndUpdate(userId,
-          {
-            $inc: { walletAmount: wAmount }
-          })
+      const walletEntry = {
+        walletAmount: wAmount,
+        creditDate: Date.now()
       }
-      orderModel.updateOne({ _id: id }, { $set: { status: oStatus } }).then(() => {
-        resolve()
-      })
+      if (wallet) {
+        if ((order.paymentOption === 'COD' && order.status === 'Delivered') || (order.paymentOption === 'Razorpay')) {
+          walletModel.updateOne({ userId },
+            {
+              $inc: { totalAmount: wAmount },
+              $push: { walletHistory: walletEntry }
+            }).then((response) => {
+            console.log(response)
+          })
+          orderModel.updateOne({ _id: id }, { $set: { status: oStatus } }).then(() => {
+            resolve()
+          })
+        } else {
+          orderModel.updateOne({ _id: id }, { $set: { status: oStatus } }).then(() => {
+            resolve()
+          })
+        }
+      } else {
+        const newWallet = new walletModel({
+          userId,
+          walletHistory: walletEntry,
+          totalAmount: wAmount
+        })
+        newWallet.save()
+        orderModel.updateOne({ _id: id }, { $set: { status: oStatus } }).then(() => {
+          resolve()
+        })
+      }
     })
   },
 
@@ -583,5 +609,29 @@ module.exports = {
         })
       resolve()
     })
+  },
+
+  getCategories: () => {
+    return new Promise((resolve, reject) => {
+      categoryModel.find({}).then((response) => {
+        if (response) {
+          resolve(response)
+        } else {
+          resolve(null)
+        }
+      })
+    })
+  },
+
+  walletDetails: (userId) => {
+    return new Promise((resolve, reject) => [
+      walletModel.findOne({ userId }).then((response) => {
+        if (response) {
+          resolve(response)
+        } else {
+          resolve()
+        }
+      })
+    ])
   }
 }

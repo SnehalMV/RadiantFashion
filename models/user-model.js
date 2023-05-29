@@ -33,13 +33,7 @@ try {
     status: {
       type: Boolean,
       default: true
-    },
-
-    walletAmount: {
-      type: Number,
-      default: 0
     }
-
   })
 
   module.exports = mongoose.model('user', userSchema)

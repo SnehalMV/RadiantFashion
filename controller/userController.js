@@ -1,4 +1,4 @@
-const { userSignUp, userLogin, viewProducts, viewSingleProduct, doOTPLogin, verifyOTP, addToCart, getCartProducts, getCartCount, updateQuantity, deleteCartProduct, getCartTotal, addAddress, getAllAddresses, changeDefaultAddress, getDefaultAddress, placeOrderHelper, removeCartProducts, getCartDetails, getOrderDetails, cancelOrder, getOrderProducts, generateRazorpayOrder, verifyPayment, changePaymentStatus, getUserDetails, editUserDetails, viewCoupons, selectCouponHelper, getBanners, validateCoupon, changePassword, walletPayment } = require('../helper/user-helper')
+const { userSignUp, userLogin, viewProducts, viewSingleProduct, doOTPLogin, verifyOTP, addToCart, getCartProducts, getCartCount, updateQuantity, deleteCartProduct, getCartTotal, addAddress, getAllAddresses, changeDefaultAddress, getDefaultAddress, placeOrderHelper, removeCartProducts, getCartDetails, getOrderDetails, cancelOrder, getOrderProducts, generateRazorpayOrder, verifyPayment, changePaymentStatus, getUserDetails, editUserDetails, viewCoupons, selectCouponHelper, getBanners, validateCoupon, changePassword, walletPayment, getCategories, walletDetails } = require('../helper/user-helper')
 
 module.exports = {
   // Middleware for User Login Authentication
@@ -87,15 +87,17 @@ module.exports = {
     let cartCount = null
     if (req.session.user) {
       const user = req.session.user
+      const categories = await getCategories()
       cartCount = await getCartCount(user._id)
       viewProducts().then((response) => {
         const products = response
-        res.render('user/shop', { user, products, cartCount })
+        res.render('user/shop', { user, products, cartCount, categories })
       })
     } else {
-      viewProducts().then((response) => {
+      viewProducts().then(async (response) => {
         const products = response
-        res.render('user/shop', { products })
+        const categories = await getCategories()
+        res.render('user/shop', { products, categories })
       })
     }
   },
@@ -157,12 +159,13 @@ module.exports = {
     const userDetails = await getUserDetails(user._id)
     const cartCount = await getCartCount(user._id)
     const defaultAddress = await getDefaultAddress(user._id)
+    const wallet = await walletDetails(user._id)
     getAllAddresses(user._id).then((response) => {
       const savedAddress = response.addresses
-      res.render('user/dash', { user, cartCount, savedAddress, userDetails, defaultAddress })
+      res.render('user/dash', { user, cartCount, savedAddress, userDetails, defaultAddress, wallet })
     }).catch(() => {
       const savedAddress = []
-      res.render('user/dash', { user, cartCount, savedAddress, userDetails })
+      res.render('user/dash', { user, cartCount, savedAddress, userDetails, wallet })
     })
   },
 
@@ -171,7 +174,7 @@ module.exports = {
     res.render('user/otplogin')
   },
 
-  // Verification of User's Number and to display Enter OTP Page 
+  // Verification of User's Number and to display Enter OTP Page
   postNumber: (req, res) => {
     const number = req.body.number
     req.session.number = req.body.number
@@ -209,7 +212,7 @@ module.exports = {
     })
   },
 
-  // Function to Delete session 
+  // Function to Delete session
   getLogout: (req, res) => {
     req.session.user = null
     res.redirect('/')
@@ -259,7 +262,7 @@ module.exports = {
     })
   },
 
-  // Function to create Order 
+  // Function to create Order
   placeOrder: (req, res) => {
     const order = req.body
     const user = req.session.user
@@ -324,7 +327,7 @@ module.exports = {
     })
   },
 
-  // Display Order Placed Page 
+  // Display Order Placed Page
   getOrderPlaced: (req, res) => {
     const user = req.session.user
     const cartCount = 0
@@ -404,7 +407,7 @@ module.exports = {
     })
   },
 
- // Change the password within Database with New Password
+  // Change the password within Database with New Password
   postPasswordChange: (req, res) => {
     const password = req.body.newPass
     const number = req.session.number
