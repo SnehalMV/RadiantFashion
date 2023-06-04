@@ -391,10 +391,10 @@ module.exports = {
   },
 
   // Change Status of an Order to Either Cancelled or Returned
-  cancelOrder: (id, oStatus, userId) => {
+  cancelOrder: (id, oStatus, userIdParam) => {
     return new Promise(async (resolve, reject) => {
       const order = await orderModel.findById(id)
-      const wallet = await walletModel.findOne({ userId })
+      const wallet = await walletModel.findOne({ userId: userIdParam })
       const wAmount = order.totalAmount
       const walletEntry = {
         walletAmount: wAmount,
@@ -402,7 +402,7 @@ module.exports = {
       }
       if (wallet) {
         if ((order.paymentOption === 'COD' && order.status === 'Delivered') || (order.paymentOption === 'Razorpay')) {
-          walletModel.updateOne({ userId },
+          walletModel.updateOne({ userIdParam },
             {
               $inc: { totalAmount: wAmount },
               $push: { walletHistory: walletEntry }
@@ -419,7 +419,7 @@ module.exports = {
         }
       } else {
         const newWallet = new walletModel({
-          userId,
+          userId: userIdParam,
           walletHistory: walletEntry,
           totalAmount: wAmount
         })
