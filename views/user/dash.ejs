@@ -133,6 +133,7 @@
                     </div>
                   </div>
                 </div><!-- .End .tab-pane -->
+
                 <div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
                   <div class="col-lg-12">
                     <% if (locals.wallet) { %>
@@ -176,23 +177,20 @@
                               </table><!-- End .table table-wishlist -->
                             </div><!-- End .filter-items -->
                           </div><!-- End .widget-body -->
-
-                        </div><!-- End .collapse -->
-                      </div><!-- End .widget -->
-
-                      <% } else { %>
-                        <div class="card card-dashboard">
-                          <div class="card-body">
-                            <h3 class="card-title mb-2">Wallet Balance: </h3><!-- End .card-title -->
-
-                            <h5>Rs.0000</h5>
-
-                          </div><!-- End .card-body -->
-                        </div><!-- End .card-dashboard -->
-                        <% } %>
-                  </div><!-- End .col-lg-6 -->
-                </div><!-- End .row -->
-
+                          <% } else { %>
+                            <div class="card card-dashboard">
+                              <div class="card-body">
+                                <h3 class="card-title mb-2">Wallet Balance: </h3><!-- End .card-title -->
+    
+                                <h5>Rs.0000</h5>
+    
+                              </div><!-- End .card-body -->
+                            </div><!-- End .card-dashboard -->
+                            <% } %>
+                          </div><!-- End .collapse -->
+                        
+                    </div><!-- End .row -->
+ 
                 <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
                   <p>The following addresses will be used on the checkout page by default.</p>
 
